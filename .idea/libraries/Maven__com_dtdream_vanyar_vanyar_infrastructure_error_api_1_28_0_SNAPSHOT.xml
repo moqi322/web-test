@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.dtdream.vanyar:vanyar-infrastructure-error-api:1.28.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/dtdream/vanyar/vanyar-infrastructure-error-api/1.28.0-SNAPSHOT/vanyar-infrastructure-error-api-1.28.0-20170601.013531-8.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/dtdream/vanyar/vanyar-infrastructure-error-api/1.28.0-SNAPSHOT/vanyar-infrastructure-error-api-1.28.0-20170601.013531-8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/dtdream/vanyar/vanyar-infrastructure-error-api/1.28.0-SNAPSHOT/vanyar-infrastructure-error-api-1.28.0-20170601.013531-8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

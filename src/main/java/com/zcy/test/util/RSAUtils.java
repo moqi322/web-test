@@ -66,6 +66,7 @@ public class RSAUtils {
     }
 
     public static void main(String[] args) throws Exception {
+//        aaa
 //       getPublicKey();
 //        String  account="002056";   String state="A3AEnI";
 //        String accountExpireTime = account  + "," + System.currentTimeMillis() + "," + state;

@@ -6,6 +6,7 @@ import lombok.var;
 import org.omg.IOP.Encoding;
 import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.reader.StreamReader;
+import redis.clients.jedis.StreamInfo;
 
 import javax.crypto.Cipher;
 import java.io.*;
@@ -66,21 +67,22 @@ public class RSAUtils {
     }
 
     public static void main(String[] args) throws Exception {
-//        aaa
-//       getPublicKey();
-//        String  account="002056";   String state="A3AEnI";
-//        String accountExpireTime = account  + "," + System.currentTimeMillis() + "," + state;
-//        byte[] bytes = RSAUtils.encryptData(accountExpireTime.getBytes(Charset.forName("utf-8")),getPublicKey());
-//        String token = URLEncoder.encode(com.sun.org.apache.xml.internal.security.utils.Base64.encode(bytes).replace("\n",""),"utf-8");
-//        System.out.println(bytes+"+ ----vvvvvvvv");
-//        System.out.println("----+"+token);
+
+       getPublicKey();
+        String  account="002056";   String state="A3AEnI";
+        String accountExpireTime = account  + "," + System.currentTimeMillis() + "," + state;
+        byte[] bytes = RSAUtils.encryptData(accountExpireTime.getBytes(Charset.forName("utf-8")),getPublicKey());
+        String token = URLEncoder.encode(com.sun.org.apache.xml.internal.security.utils.Base64.encode(bytes).replace("\n","").replace("\r",""),"utf-8");
+        System.out.println(bytes+"+ ----vvvvvvvv");
+        System.out.println("----+"+token);
 
 
-       String  GongyueprivateKeyce="MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIrJN6r6SlFfe1JBY+yMU4sjwsVFmumrwMBwF9Q7o58HFtmcXmX4VPJmpgnCoi4y3E2UucpRdw/b8iF5EgzBu5OzEatdc62D8DFx3itbpfiMwgIhrEwlDzopVsCiNBtq9KpwgxMwuWUJP6dJaCmkKd4g9qU9LCYW/4R9lqRoUWSZAgMBAAECgYBQLNX/6/+q6qHvbt8u9BH/O3V1STSo8RO1GAxsCtgHMq08oVzXQ5KvRiV9VfcjATbLirOZ8V36x3ElbS/ENtcJLe5rIppJWBgsKOQQtpiKnZSQ6eFeu3kzADmxtcu2qEjnCCWL8E42/32tuo+5OjqwBAcFyat5OiDDcpus+BMgUQJBAMtCEr5wNboha1jNuQwxc5T0F16KLj/947nYuw3HxEuLQaQs6oZoBQW36LXu7fSnKSeSHWmEKbomLoOeT4b4BU8CQQCuzGypsABOODp5WZ/5i5v/aPzeAKfNRE31zZS+Om99+JnTzDECo4xwxMEW/k5OyoBnSo2cM4dfnxDgJWUOWs2XAkAop0qAdIkKdWy3Ek6Utb9cZ4XVDuY5Plqx7Ttcgjwsr+mtIJ63y05V2nbdDLDjYhvFImBnnluKM+DRynQ1lp3ZAkAGf/mGcdIBFpwuCQQm3mclnzzP8IxM2L5hZoyiaj/dGlJ2CsDDzVsakmZvuXMmAOe3b5FGfrAJATw6aYmReBTvAkAA4n76SwFp882zJLvKTo8w4IoUH4JvCzQb49Tdqaj7PQ8/dxr3eJ3/N8QHfTItl6httm7IZlKWwfQlSMv8a13A";
-      String GongyueToken="Njc1OiXzyM1g/kxMWbMFyK7SQSe0Fd5cZQW9YISTpiAehqmsZY2TWhvcCsDDAn6B9ig47R1GIs2N4gK7r3d5z0yq4QKNL/0LYuaMokFtJKmQBetgCSODeONnLj+2nl3QCK8oklEPQtsAkpFJUYi15/nFxTu9RfRGzOOpENWPI7Y=";
-       String CaiJingPrivateKeyce="MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIP3xp8kCgTHF8vg1VK0uHpZbtQgthI6pHpsT0mErWdMO7LuHgbGdkQiR+G9C1fFLxrh0N1ceCYmy1HlBPYfWVkPnmQ49u5eNlB8XT9QMz4NJBtE2ufWJIffUpXUBfdEc1oGS2aFP8LMomcJT5DWg7ahJ6eAyXRcl/B31pmmLzSLAgMBAAECgYAWwx4XRPgVauHH4Lfq1BEdyV88Z4gADO1h0Fy8qY3fS17gtgGn2YN8rQ0I+rqCIRjG4jxMci6nJfnb3kzExxN58XdkASAviJUMI5Za47gLAdqiP50qhABA832+AUZCp76SjHw1qjsiIyPz7j26c7+Gy+S5RcFK72kbVHGD7eWKgQJBAMjj5I7tGMuvYZ2MXG2mHX4es90aAOlX5nHsINXH4IawVqONEF7wcs7V8bUQRaK2tni59TWow57MvvDwtjGcgckCQQCoK5vqcRbHJSxGNdXLHQJCcAXh4Ov4sbRdqug+GcPO8hEV9BjERrLFULypiwJWLd8bTd+2Uzj4ClyFVsCAf02zAkAFYSzusuS2F6U6jdavzQH/LZ1Nb3PUy9jM9jDO6MJXeQNo788fa7r3VP1bBuuGdvQd+YTaggFzEDKQyzFl1LYZAkAYIYnR7kBSeycLPBZdeuAkIGb3roqtuPIkrq18m73ZKCsDd29GWs60OY2Y1nWTYCmvhVEgnHiEPxhfmb8tsRa5AkAAr551x6wrL5kwLgkWt3itLx2JsEYEsX1Sf5SlGOLeVEC9AXgtsUYT3c1S5OZC+TnqIBjMZSR2c7CLENK00Aja";
-      PrivateKey privateKey2 = loadPrivateKey(CaiJingPrivateKeyce);
-        byte[] decryptByte = RSAUtils.decryptData(Base64.getDecoder().decode(GongyueToken),privateKey2 );
+
+
+        String wenzhoutoken ="PU1di4CCT9i5A0htgndQV1Ff2TOKy/j+EH+u4Q1tTlm9TqZbXlAoLzkNMTKFKdV7HnvNQzKT2YiCPjjZuBQLcUJzFizsmoN9CFcQJh2E+OzSEfbZ7v4f0WrFplfajgdSTb9aSioOkwfIrSYqBdwCWAMptb0nVQDBTt+gOKCUN+U=";
+        String  privateKey  ="MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAIP3xp8kCgTHF8vg1VK0uHpZbtQgthI6pHpsT0mErWdMO7LuHgbGdkQiR+G9C1fFLxrh0N1ceCYmy1HlBPYfWVkPnmQ49u5eNlB8XT9QMz4NJBtE2ufWJIffUpXUBfdEc1oGS2aFP8LMomcJT5DWg7ahJ6eAyXRcl/B31pmmLzSLAgMBAAECgYAWwx4XRPgVauHH4Lfq1BEdyV88Z4gADO1h0Fy8qY3fS17gtgGn2YN8rQ0I+rqCIRjG4jxMci6nJfnb3kzExxN58XdkASAviJUMI5Za47gLAdqiP50qhABA832+AUZCp76SjHw1qjsiIyPz7j26c7+Gy+S5RcFK72kbVHGD7eWKgQJBAMjj5I7tGMuvYZ2MXG2mHX4es90aAOlX5nHsINXH4IawVqONEF7wcs7V8bUQRaK2tni59TWow57MvvDwtjGcgckCQQCoK5vqcRbHJSxGNdXLHQJCcAXh4Ov4sbRdqug+GcPO8hEV9BjERrLFULypiwJWLd8bTd+2Uzj4ClyFVsCAf02zAkAFYSzusuS2F6U6jdavzQH/LZ1Nb3PUy9jM9jDO6MJXeQNo788fa7r3VP1bBuuGdvQd+YTaggFzEDKQyzFl1LYZAkAYIYnR7kBSeycLPBZdeuAkIGb3roqtuPIkrq18m73ZKCsDd29GWs60OY2Y1nWTYCmvhVEgnHiEPxhfmb8tsRa5AkAAr551x6wrL5kwLgkWt3itLx2JsEYEsX1Sf5SlGOLeVEC9AXgtsUYT3c1S5OZC+TnqIBjMZSR2c7CLENK00Aja";
+         PrivateKey privateKey2 = loadPrivateKey(privateKey);
+        byte[] decryptByte = RSAUtils.decryptData(Base64.getDecoder().decode(wenzhoutoken),privateKey2 );
             String decryptStr = new String(decryptByte, "utf-8");
             if(!StringUtils.hasText(decryptStr)){
                 log.info("密文错误，解密后的报文信息为空！");
